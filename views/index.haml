@@ -1,0 +1,30 @@
+:javascript
+  $(document).ready(function() {
+    $("a.delete").click(function() {
+      $.delete_("/" + this.id, {}, function(data){
+        $("#"+data).parent().hide();
+      })
+    });    
+
+    $("#todo_add").click(function() {
+      var todo_summary = $("#todo_summary").val()
+      alert(todo_summary);
+      $.post("/create",
+        {summary : todo_summary },
+        function(){
+      alert(todo_summary);
+          $("#todolist").append("<li>" + todo_summary + "</li>");
+        })
+    });
+  })
+  
+%h3= @flash
+
+= @header_message
+%ul{ :id => "todolist" }
+  = partial :todo, :collection => @todos
+            
+%div
+  %label{ :for => "todo_summary" } Summary: 
+  %input{ :type => "text", :name => "summary", :id => "todo_summary" }
+  %input{ :type => "button", :id => "todo_add", :value => "Add" }
